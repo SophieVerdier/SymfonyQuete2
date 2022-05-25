@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Categories : {% endblock %}
+
+{% block body %}
+
+{% if categoryResults is not empty %}
+<h1>Disponible dans la catégorie {{category}} :</h1>
+<ul>
+{% endif %}
+{% for item in categoryResults %}
+
+
+<li> {{item.id}} # {{item.title}} <p> {{item.synopsis}}</p> </li>
+<a href="{{ path("program_show", { id: item.id }) }}"></a>
+
+{% endfor %}
+</ul>
+{% endblock %}

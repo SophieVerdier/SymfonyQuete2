@@ -13,23 +13,27 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
     const PROGRAMS = [
         'program1' => [
             'Title' => 'The Walking Dead',
-            'category' => 'Category_Horreur',
+            'category' => 'Horreur',
             'synopsis' => 'A group of survivors find themselves in the midst of a zombie apocalypse.',
              ],
         'program2' => [
             'Title' => 'Game of Thrones',
+            'category' => 'Fantastique',
             'synopsis' => 'Nine noble families fight for control over the mythical lands of Westeros, while an ancient enemy returns after being dormant for thousands of years.',
             ],  
         'program3' => [
             'Title' => 'Petit Ours Brun',
+            'category' => 'Animation',
             'synopsis' => 'A bear family is forced to flee their home after being attacked by a group of racoons.',
             ],
           'program4' => [      
             'Title' => 'Lost',
+            'category' => 'Action',
             'synopsis' => 'Survivors from flight 815 found themselves on a deserted magical island.',
             ],
             'program5' => [
             'Title' => 'The hundred',
+            'category' => 'Aventure',
             'synopsis' => 'A group of survivors from the earth is forced to face a deadly virus that has been unleashed on the planet.',
             ],
         ];
