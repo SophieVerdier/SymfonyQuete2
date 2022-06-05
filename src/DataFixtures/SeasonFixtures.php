@@ -11,19 +11,25 @@ class SeasonFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        for ($i = 0; $i <= 50; $i++) {
+
+        $faker = Factory::create('fr_FR');
+
+        for($i = 0; $i < 500; $i++) {
             $season = new Season();
-            $season->setYear($i);
-            $season->setNumber($i);
-            $season->setDescription('BreakingBad_' .$i);
-            $season->setProgram($this->getReference('program_'. ProgramFixtures::PROGRAMS[rand(0,4)]['category']));
+            //Ce Faker va nous permettre d'alimenter l'instance de Season que l'on souhaite ajouter en base
+            $season->setNumber($faker->numberBetween(1, 10));
+            $season->setYear($faker->year());
+            $season->setDescription($faker->paragraphs(3, true));
+
+            $season->setProgram($this->getReference('program_' . $faker->numberBetween(0, 100)));
+
             $manager->persist($season);
-            $this->addReference('season_'.$i, $season);
         }
+        $this->addReference('season_' . $i, $season);
 
         $manager->flush();
-
     }
+
 
     public function getDependencies()
     {
