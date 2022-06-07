@@ -2,4 +2,8 @@
 
 {% block body %}
 <h1> {{episode.title}}</h1>
+<h1> {{episode.number}}</h1>
+<h1> {{episode.season.description}}</h1>
+
+<h1> {{ dump(episode)}}</h1>
 {% endblock %}

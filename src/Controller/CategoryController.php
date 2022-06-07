@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Categorie;
-use App\Repository\CategorieRepository;
+use App\Entity\Category;
+use App\Repository\CategoryRepository;
 use App\Repository\ProgramRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,29 +15,38 @@ use Symfony\Component\HttpFoundation\Request;
 class CategoryController extends AbstractController
 {
 
-    #[Route('/new', name: 'new')]
-    public function new(Request $request, CategorieRepository $categorieRepository)
-    {
-        $category = new Categorie;
+        #[Route('/new', name: 'new')]
+        public function new(Request $request, CategoryRepository $categoryRepository)
+        {
+            $category = new Category();
+    
+            // Create the form, linked with $category
+            $form = $this->createForm(CategoryType::class, $category);
+            
+            $form->handleRequest($request);
+            // Was the form submitted ?
 
-        $form = $this->createForm(CategoryType::class, $category);
-        
-        $form->handleRequest($request);
-       
-        if($form->isSubmitted()){
-            $categorieRepository->add($category, true);      
+            if ($form->isSubmitted()) {
+                $categoryRepository->add($category, true);   
+                // Deal with the submitted data
+                // For example : persiste & flush the entity
+                // And redirect to a route that display the result
+            }
+            // Render the form (best practice)
+            return $this->renderForm('category/new.html.twig', [
+                'form' => $form,
+            ]);
+    
+            // Alternative
+            // return $this->render('category/new.html.twig', [
+            //   'form' => $form->createView(),
+            // ]);
         }
 
-        // Render the form (best practice)
-        return $this->renderForm('category/new.html.twig', [
-            'form' => $form,
-        ]);
-    }
-
     #[Route('/', name: 'index')]
-    public function index(CategorieRepository $categorieRepository, ProgramRepository $programRepository): Response
+    public function index(CategoryRepository $categoryRepository, ProgramRepository $programRepository): Response
     {
-        $categories = $categorieRepository->findAll();
+        $categories = $categoryRepository->findAll();
         $itemByCategory = [];
 
         foreach ($categories as $item) {
@@ -51,9 +60,9 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/{categoryName}', name: 'show')]
-    public function show(string $categoryName, CategorieRepository $categorieRepository, ProgramRepository $programRepository)
+    public function show(string $categoryName, CategoryRepository $categoryRepository, ProgramRepository $programRepository)
     {
-        $categorie = $categorieRepository->findByName($categoryName);
+        $categorie = $categoryRepository->findByName($categoryName);
 
         if (!$categorie) {
             throw $this->createNotFoundException(
@@ -61,7 +70,7 @@ class CategoryController extends AbstractController
             );
         }
 
-        $categoryResults = $programRepository->findByCategorie(
+        $categoryResults = $programRepository->findByCategory(
             $categorie,
             ['id' => 'ASC']
         );
