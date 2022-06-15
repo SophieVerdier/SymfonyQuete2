@@ -15,7 +15,7 @@ class EpisodeFixtures extends Fixture implements DependentFixtureInterface
 
         $faker = Factory::create();
 
-        for ($i = 1; $i <= 5000; $i++) {
+        for ($i = 1; $i <= 500; $i++) {
 
             $episode = new Episode();
             $episode->setSeason($this->getReference('season_' . $faker->numberBetween(0, 500)));

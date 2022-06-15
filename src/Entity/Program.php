@@ -6,8 +6,11 @@ use App\Repository\ProgramRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProgramRepository::class)]
+#[UniqueEntity('title', message: "Ce titre existe déjà")]  
 class Program
 {
     #[ORM\Id]
@@ -15,10 +18,18 @@ class Program
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
+    #[Assert\Regex(
+        pattern: '/plus belle la vie/i',
+        match: false,
+        message: 'On parle de vraies séries ici')]
+
     private $title;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\NotBlank]
     private $synopsis;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -38,9 +49,13 @@ class Program
     #[ORM\OneToMany(mappedBy: 'program', targetEntity: Season::class)]
     private $seasons;
 
+    #[ORM\ManyToMany(targetEntity: Actor::class, mappedBy: 'programs')]
+    private $actors;
+
     public function __construct()
     {
         $this->seasons = new ArrayCollection();
+        $this->actors = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,6 +161,33 @@ class Program
             if ($season->getProgram() === $this) {
                 $season->setProgram(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Actor>
+     */
+    public function getActors(): Collection
+    {
+        return $this->actors;
+    }
+
+    public function addActor(Actor $actor): self
+    {
+        if (!$this->actors->contains($actor)) {
+            $this->actors[] = $actor;
+            $actor->addProgram($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActor(Actor $actor): self
+    {
+        if ($this->actors->removeElement($actor)) {
+            $actor->removeProgram($this);
         }
 
         return $this;
