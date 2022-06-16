@@ -21,10 +21,7 @@ class Program
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
-    #[Assert\Regex(
-        pattern: '/plus belle la vie/i',
-        match: false,
-        message: 'On parle de vraies séries ici')]
+    #[Assert\Regex(pattern: '/plus belle la vie/i', match: false, message: 'On parle de vraies séries ici')]
 
     private $title;
 
