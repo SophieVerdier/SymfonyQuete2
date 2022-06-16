@@ -19,7 +19,7 @@ class ActorFixtures extends Fixture implements DependentFixtureInterface
 
             $actor = new Actor();
             $actor->setName($faker->name());
-            $actor->addProgram($this->getReference('program_' . rand(1, 100)));
+            $actor->addProgram($this->getReference('program_' . rand(0, 4)));
             $manager->persist($actor);
             
         }
@@ -33,7 +33,7 @@ class ActorFixtures extends Fixture implements DependentFixtureInterface
         
         return [
             ProgramFixtures::class,
-            ActorFixtures::class,
+            
                
         ];
     }
